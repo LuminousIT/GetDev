@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
@@ -17,10 +18,12 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<GetDevData> dataItem;
     SwipeRefreshLayout swipeRefresh;
     ProgressDialog pd;
+    TextView mNetworkError;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
 
         mRecyclerView = findViewById(R.id.recyclerView);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -35,25 +38,10 @@ public class MainActivity extends AppCompatActivity {
 
         new DevDataAsync().execute();
 
-        refreshMethod();
+
     }
 
-    public void refreshMethod() {
-        swipeRefresh = findViewById(R.id.swipeLoader);
-        swipeRefresh.setColorSchemeResources(android.R.color.holo_blue_dark);
-        swipeRefresh.setOnRefreshListener(
-                new SwipeRefreshLayout.OnRefreshListener() {
-                    @Override
-                    public void onRefresh() {
-                        pd = new ProgressDialog(getApplicationContext());
-                        pd.setMessage("Loading dev details...");
-                        pd.show();
 
-                        new DevDataAsync().execute();
-                    }
-                }
-        );
-    }
 
     public class DevDataAsync extends AsyncTask<Void, Void, ArrayList<GetDevData>> {
 
@@ -75,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         protected void onPostExecute(ArrayList<GetDevData> dataItemList) {
-            pd.dismiss();
+
             for (GetDevData a: dataItemList) {
                 Log.i("next to Adapter", a.getmName() + " " + a.getmRank());
             }
