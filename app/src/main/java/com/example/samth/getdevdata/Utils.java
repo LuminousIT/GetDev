@@ -2,6 +2,7 @@ package com.example.samth.getdevdata;
 
 import android.content.Context;
 import android.util.Log;
+import android.view.View;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -16,6 +17,8 @@ import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
 import java.util.ArrayList;
+
+import static com.example.samth.getdevdata.MainActivity.mNetworkError;
 
 class Utils {
 
@@ -37,12 +40,20 @@ class Utils {
             urlConnection.setRequestMethod("GET");
             urlConnection.setConnectTimeout(10000);
             urlConnection.setReadTimeout(10000);
-            urlConnection.connect();
+            try  {urlConnection.connect();} catch (Exception e) {
+                //this was also supposed to catch the connection to the internet error but *facepalm*
+                mNetworkError.setVisibility(View.VISIBLE);
+                e.printStackTrace();
+            };
 
             if (urlConnection.getResponseCode() == 200) {
                 inputStream = urlConnection.getInputStream();
                 jsonResponse = readFromStream(inputStream);
                 Log.i("URL Connection", jsonResponse);
+            } else {
+                //We are supposed to display network error via the mNetworkError tv here.
+                //but it didnt work
+                mNetworkError.setVisibility(View.VISIBLE);
             }
 
             JSONObject mainJsonResponse = new JSONObject(jsonResponse);

@@ -9,25 +9,39 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
+//    public static Object mNetworkError;
     RecyclerView mRecyclerView;
     ArrayList<GetDevData> dataItem;
     SwipeRefreshLayout swipeRefresh;
     ProgressDialog pd;
-    TextView mNetworkError;
+    public static TextView mNetworkError;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        mNetworkError = findViewById(R.id.networkerror);
 
         mRecyclerView = findViewById(R.id.recyclerView);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
+        swipeRefresh = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout);
+        swipeRefresh.setColorSchemeResources(android.R.color.holo_blue_light);
+        swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                new DevDataAsync().execute();
+                swipeRefresh.setRefreshing(false);
+                mRecyclerView.smoothScrollToPosition(0);
+                Toast.makeText(MainActivity.this, "Data Loaded", Toast.LENGTH_SHORT).show();
+            }
+        });
 
         dataItem = new ArrayList<>();
 
