@@ -12,6 +12,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.List;
+
+import RestApi.ApiClient;
+import RestApi.ApiService;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -36,22 +43,19 @@ public class MainActivity extends AppCompatActivity {
         swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                new DevDataAsync().execute();
-                swipeRefresh.setRefreshing(false);
-                mRecyclerView.smoothScrollToPosition(0);
-                Toast.makeText(MainActivity.this, "Data Loaded", Toast.LENGTH_SHORT).show();
+//                new DevDataAsync().execute();
+//                swipeRefresh.setRefreshing(false);
+//                mRecyclerView.smoothScrollToPosition(0);
+//                Toast.makeText(MainActivity.this, "Data Loaded", Toast.LENGTH_SHORT).show();
+
+                loadJsonData();
             }
         });
 
         dataItem = new ArrayList<>();
 
-//        GetDevData example = new GetDevData("Luminous", "Intermediate", R.drawable.ic_launcher_background);
-//        GetDevData example1 = new GetDevData("mekus", "beginner", R.drawable.ic_launcher_background);
-//        dataItem.add(example);
-//        dataItem.add(example1);
-
-        new DevDataAsync().execute();
-
+        //new DevDataAsync().execute();
+        loadJsonData();
 
     }
 
@@ -86,4 +90,26 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+
+    public void loadJsonData() {
+        ApiService apiService = ApiClient.getClient().create(ApiService.class);
+        Call<GetDevDataResponse> call = apiService.getDataItems();
+        call.enqueue(new Callback<GetDevDataResponse>() {
+            @Override
+            public void onResponse(Call<GetDevDataResponse> call, Response<GetDevDataResponse> response) {
+                List<GetDevData> devData = response.body().getDataItems();
+                swipeRefresh.setRefreshing(false);
+                mRecyclerView.setAdapter(new GetDevAdapter(getApplicationContext(), devData));
+                mRecyclerView.smoothScrollToPosition(0);
+
+            }
+
+            @Override
+            public void onFailure(Call<GetDevDataResponse> call, Throwable t) {
+                Log.d("Error", t.getMessage());
+                Toast.makeText(MainActivity.this, "Error fetching data...", Toast.LENGTH_SHORT).show();
+                //disconnected.setVisibility(View.VISIBLE);
+            }
+        });
+    }
 }

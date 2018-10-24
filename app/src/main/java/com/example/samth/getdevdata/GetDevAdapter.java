@@ -10,14 +10,14 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class GetDevAdapter extends RecyclerView.Adapter<GetDevAdapter.ViewHolder> {
 
     Context context;
-    ArrayList<GetDevData> listData;
+    List<GetDevData> listData;
 
-    public GetDevAdapter(Context context, ArrayList<GetDevData> listData) {
+    public GetDevAdapter(Context context, List<GetDevData> listData) {
         this.listData = listData;
         this.context = context;
     }
