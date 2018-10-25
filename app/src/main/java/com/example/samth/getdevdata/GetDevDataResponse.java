@@ -7,13 +7,13 @@ import java.util.List;
 public class GetDevDataResponse {
 
     @SerializedName("items")
-    public List<GetDevData> dataItems;
+    public List<UserData> dataItems;
 
-    public List<GetDevData> getDataItems(){
+    public List<UserData> getDataItems(){
         return dataItems;
     }
 
-    public void setDataItems(List<GetDevData> dataItems) {
+    public void setDataItems(List<UserData> dataItems) {
         this.dataItems = dataItems;
     }
 }

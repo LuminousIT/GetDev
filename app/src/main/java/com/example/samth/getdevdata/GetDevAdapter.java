@@ -15,9 +15,9 @@ import java.util.List;
 public class GetDevAdapter extends RecyclerView.Adapter<GetDevAdapter.ViewHolder> {
 
     Context context;
-    List<GetDevData> listData;
+    List<UserData> listData;
 
-    public GetDevAdapter(Context context, List<GetDevData> listData) {
+    public GetDevAdapter(Context context, List<UserData> listData) {
         this.listData = listData;
         this.context = context;
     }
